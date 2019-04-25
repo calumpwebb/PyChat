@@ -1,5 +1,4 @@
 # TODO: Implment proper exceptions here
-import json
 from json import JSONEncoder
 
 # https://stackoverflow.com/questions/3768895/how-to-make-a-class-json-serializable
@@ -35,7 +34,3 @@ class NotAuthorised(JsonSerializable):
     message = "Not authorised for this resource"
     status_code = 401
 
-
-class Success(JsonSerializable):
-    message = "Successfully fulfilled request"
-    status_code = 200

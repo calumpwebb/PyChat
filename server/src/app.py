@@ -14,7 +14,7 @@ socketio = SocketIO(app)
 
 def set_up_api(api_app):
     from src.api.users.resources import namespace as user_namespace
-    from src.api.messages.resources import namespace as message_namespace
+    from src.api.tokens.resources import namespace as token_namespace
 
     app.config["SECRET_KEY"] = Configuration.SECRET_KEY
 
@@ -36,7 +36,7 @@ def set_up_api(api_app):
     api.init_app(v1_blueprint)
 
     api.add_namespace(user_namespace)
-    api.add_namespace(message_namespace)
+    api.add_namespace(token_namespace)
 
     app.register_blueprint(v1_blueprint)
 
@@ -49,7 +49,7 @@ def set_up_websocket(socket_app):
 if __name__ == "__main__":
     if Configuration.SERVER_TYPE == "api":
         set_up_api(app)
-        app.run(debug=True, host="0.0.0.0", port=8000)
+        app.run(debug=True, host="0.0.0.0", port=8001)
     elif Configuration.SERVER_TYPE == "websocket":
         set_up_websocket(socketio)
         socketio.run(app, host="0.0.0.0", port=5000)
