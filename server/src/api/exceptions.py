@@ -1,17 +1,17 @@
 # TODO: Implment proper exceptions here
-# from json import JSONEncoder
+from json import JSONEncoder
 
 # https://stackoverflow.com/questions/3768895/how-to-make-a-class-json-serializable
 # This will monkey-patch json module when it's imported so JSONEncoder.default()
 # automatically checks for a special "to_json()" method and uses it to encode the object if found.
 
-#
-# def _default(self, obj):
-#     return getattr(obj.__class__, "to_json", _default.default)(obj)
-#
-#
-# _default.default = JSONEncoder().default
-# JSONEncoder.default = _default
+
+def _default(self, obj):
+    return getattr(obj.__class__, "to_json", _default.default)(obj)
+
+
+_default.default = JSONEncoder().default
+JSONEncoder.default = _default
 
 
 class JsonSerializable(object):
