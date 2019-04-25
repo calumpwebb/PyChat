@@ -14,7 +14,7 @@
 #     @staticmethod
 #     def get_sid():
 #         return request.sid
-# 
+#
 #     def on_connect(self):
 #         sid = self.get_sid()
 #         users.add(sid)
