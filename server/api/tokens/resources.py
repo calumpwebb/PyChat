@@ -2,9 +2,10 @@ from flask_jwt import current_identity, jwt_required
 from flask_restplus import Namespace, Resource
 from sqlalchemy import text
 
-from src import config, db
-from src.api.tokens.mapper import UserTokenSchema
-from src.utils import generate_random_string
+import config
+import db
+from api import UserTokenSchema
+from utils import generate_random_string
 
 namespace = Namespace("")
 

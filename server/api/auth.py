@@ -1,6 +1,7 @@
 from sqlalchemy import func
 
-from src import config, db
+import config
+import db
 
 
 def authenticate(username, password):
