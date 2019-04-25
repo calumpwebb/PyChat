@@ -125,4 +125,6 @@ dmypy.json
 # postgres-data
 postgres-data/
 
-.idea/
+**/.idea/
+
+server/postgres-data/
