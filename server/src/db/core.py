@@ -1,12 +1,16 @@
 from passlib.hash import bcrypt
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, Text, text
+from sqlalchemy import (Boolean, Column, DateTime, ForeignKey, Integer, Text,
+                        text)
 from sqlalchemy.ext.declarative import as_declarative
+from sqlalchemy.orm import relationship
 
 
 """
 General guideline:
 ClassName = plural
 TableName = singular
+
+server_default specified when possible
 """
 
 
@@ -34,11 +38,18 @@ class User(Base):
         return bcrypt.verify(password, self.password)
 
 
-class Message(Base):
-    __tablename__ = "messages"
+class UserInviteToken(Base):
+    __tablename__ = "user_invite_tokens"
 
-    user_id = Column(Integer, ForeignKey("users.id"))
+    token_issuer_id = Column(
+        Integer, ForeignKey("users.id"), nullable=False, index=True
+    )
+    token_issuer = relationship("User", foreign_keys="UserInviteToken.token_issuer_id")
 
-    message = Column(Text, nullable=False)
+    token_user_id = Column(Integer, ForeignKey("users.id"), nullable=True, index=True)
+    token_user = relationship("User", foreign_keys="UserInviteToken.token_user_id")
 
-    sent_datetime = Column(DateTime, nullable=False)
+    token = Column(Text, nullable=False)
+
+    used = Column(Boolean, nullable=False, server_default=text("false"))
+    used_datetime = Column(DateTime)

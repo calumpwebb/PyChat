@@ -3,14 +3,14 @@ from flask_restplus import Namespace, Resource
 from sqlalchemy import desc, func
 
 from src import config, db
-from src.api.exceptions import NotAuthorised, Success
+from src.api.exceptions import NotAuthorised
 from src.api.users.mapper import UserSchema
 
 namespace = Namespace("")
 
 
 @namespace.route("/users", endpoint="users")
-class Users(Resource):
+class UsersEndpoint(Resource):
     def post(self):
         """
         Allows creating a new user.
@@ -41,7 +41,7 @@ class Users(Resource):
         session.add(new_user)
         session.commit()
 
-        return Success()
+        return {}
 
     def get(self):
         """

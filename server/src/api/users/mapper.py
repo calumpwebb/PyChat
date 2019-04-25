@@ -6,7 +6,7 @@ from src import db
 class UserSchema(Schema):
     id = fields.Integer(required=True)
     created_datetime = fields.DateTime(required=True)
-    username = fields.Str(required=True)
+    username = fields.String(required=True)
     password = fields.Str(required=True)
 
     @post_load
