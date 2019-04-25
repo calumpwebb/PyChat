@@ -9,8 +9,8 @@ screens = {"login": LoginScreen}
 
 def draw(stdscr):
 
-    main = MainScreen(stdscr).render()
-    # WelcomeScreen(stdscr).render()
+    MainScreen(stdscr).render()
+    WelcomeScreen(stdscr).render()
     # login_screen = LoginScreen(stdscr)
     # login_screen.render()
 

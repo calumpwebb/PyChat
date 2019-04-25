@@ -11,12 +11,12 @@ logger = logging.getLogger(__name__)
 class WelcomeScreen(Screen):
 
     window = None
-    running = False
+
+    running = True
+
     last_key_pressed = 0
 
     def render(self):
-
-        self.running = True
 
         while self.running:
             # think about a context manager here with running: ???
