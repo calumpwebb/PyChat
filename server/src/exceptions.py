@@ -1,0 +1,2 @@
+class ServerTypeError(Exception):
+    pass

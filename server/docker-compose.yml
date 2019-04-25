@@ -1,0 +1,38 @@
+version: "2"
+services:
+  postgres:
+    container_name: pychat-postgres
+    image: postgres:11
+    ports:
+        - "5433:5432" # Exposing Postgres on different port for convenience
+    environment:
+        POSTGRES_DB: "pychat"
+        POSTGRES_PASSWORD: "password"
+        POSTGRES_USER: "postgres"
+    volumes:
+        - ./postgres-data:/var/lib/postgresql/data
+    restart: always
+
+  pychat-server-api:
+    container_name: pychat-server-api
+    image: calumwebb/pychat-server-api:latest
+    depends_on:
+      - postgres
+    ports:
+        - "8000:8000"
+    links:
+        - "postgres:pychat-postgres"
+    environment:
+        DB_URI: "postgresql://postgres:password@localhost:5433/pychat"
+
+  pychat-server-websocket:
+    container_name: pychat-server-websocket
+    image: calumwebb/pychat-server-websocket:latest
+    depends_on:
+      - postgres
+    ports:
+      - "5000:5000"
+    links:
+      - "postgres:pychat-postgres"
+    environment:
+      DB_URI: "postgresql://postgres:password@localhost:5433/pychat"
