@@ -16,14 +16,16 @@ class TokenEndpoint(Resource):
         """
         Allows a user to retrieve a new invitation token
 
-        # todo: this doesn't retry if we failed to insert because of conflicts ???
         # todo: max per user?
         """
         user = current_identity
 
         session = config.get_session()
 
-        token_string = generate_random_string(10)
+        token_string_start = generate_random_string(8)
+        token_string_end = generate_random_string(8)
+
+        token_string = token_string_start + '-' + token_string_end
 
         session.add(db.UserInviteToken(token_issuer=user, token=token_string))
 

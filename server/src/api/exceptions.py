@@ -30,6 +30,15 @@ class JsonSerializable(object):
         return result
 
 
+class MissingParameters(JsonSerializable):
+    status_code = 400
+
+    def __init__(self, missing_params):
+        super().__init__()
+
+        self.message = ['{} is required'.format(param) for param in missing_params]
+
+
 class NotAuthorised(JsonSerializable):
     message = "Not authorised for this resource"
     status_code = 401

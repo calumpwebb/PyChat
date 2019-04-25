@@ -10,6 +10,6 @@ def generate_random_string(length):
     as the first character, in the choice example, the odds of getting 'X'
     for the second character are the same as the odds of getting 'X' as the first character.
     """
-    char_set = string.ascii_letters + string.ascii_uppercase
+    char_set = string.ascii_letters + string.digits
 
     return "".join(random.choice(char_set) for _ in range(length))

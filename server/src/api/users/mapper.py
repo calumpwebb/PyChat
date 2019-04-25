@@ -4,11 +4,14 @@ from src import db
 
 
 class UserSchema(Schema):
-    id = fields.Integer(required=True)
-    created_datetime = fields.DateTime(required=True)
+    id = fields.Integer()
+    created_datetime = fields.DateTime()
     username = fields.String(required=True)
     password = fields.Str(required=True)
 
     @post_load
     def make_user(self, data):
-        return db.User(**data)
+        return db.User(
+            username=data['username'],
+            password=data['password']
+        )

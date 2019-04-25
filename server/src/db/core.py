@@ -3,7 +3,7 @@ from sqlalchemy import (Boolean, Column, DateTime, ForeignKey, Integer, Text,
                         text)
 from sqlalchemy.ext.declarative import as_declarative
 from sqlalchemy.orm import relationship
-
+import datetime
 
 """
 General guideline:
@@ -53,3 +53,8 @@ class UserInviteToken(Base):
 
     used = Column(Boolean, nullable=False, server_default=text("false"))
     used_datetime = Column(DateTime)
+
+    def set_used(self, token_user):
+        self.used = True
+        self.used_datetime = datetime.datetime.utcnow()
+        self.token_user = token_user

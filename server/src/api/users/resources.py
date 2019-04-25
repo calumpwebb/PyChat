@@ -3,7 +3,7 @@ from flask_restplus import Namespace, Resource
 from sqlalchemy import desc, func
 
 from src import config, db
-from src.api.exceptions import NotAuthorised
+from src.api.exceptions import NotAuthorised, MissingParameters
 from src.api.users.mapper import UserSchema
 
 namespace = Namespace("")
@@ -20,15 +20,32 @@ class UsersEndpoint(Resource):
         {
             "username": "str"
             "password": "str"
+            "invitation_token": "str"
         }
         """
-        # TODO: stop people spamming the sign up?
+        # todo: really not happy with this function in general :(
+
         json_data = request.get_json()
+
+        if json_data:
+            invitation_token = json_data.get('invitation_token')
+
+            if invitation_token is None:
+                return MissingParameters(['invitation_token'])
+            del json_data['invitation_token']
+        else:
+            return MissingParameters(['invitation_token', 'username', 'password'])
+
+        session = config.get_session()
+
+        token = session.query(db.UserInviteToken).filter_by(token=invitation_token).one_or_none()
+
+        if not token:
+            return NotAuthorised()
 
         new_user = UserSchema().load(json_data)
 
         # check that new user username doesn't already exist
-        session = config.get_session()
         check_user = (
             session.query(db.User)
             .filter(func.lower(db.User.username) == new_user.username.lower().strip())
@@ -39,32 +56,8 @@ class UsersEndpoint(Resource):
             return NotAuthorised()
 
         session.add(new_user)
+        token.set_used(new_user)
+
         session.commit()
 
         return {}
-
-    def get(self):
-        """
-        Allows querying either for ALL users OR users which match a certain pattern in their username.
-
-        params:
-            search: ::string:: allows searching for users via a matching algorithm (trigram)
-            limit: ::int:: allows for returning only a certain number of matches from the search
-        """
-        search = request.args.get("search")
-        limit = request.args.get("limit", default=10)
-
-        session = config.get_session()
-
-        if search:
-            users = (
-                session.query(db.User)
-                .filter(func.similarity(db.User.username, search))
-                .order_by(desc(func.similarity(db.User.username, search)))
-                .limit(limit)
-                .all()
-            )
-        else:
-            users = session.query(db.User).order_by(db.User.username).all()
-
-        return UserSchema(many=True, exclude=["password"]).dump(users)
