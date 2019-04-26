@@ -1,4 +1,3 @@
-![Alt text](img/logo.jpg?raw=true "PyChat")
 <h1 align="center"> PyChat </h1>
 <h2 align="center">An Open Source Terminal Based Messenger</h2>
 <p align="center">
