@@ -16,6 +16,4 @@ class Configuration(object):
         os.path.join(os.path.dirname(os.path.abspath(__file__)), "../")
     )
 
-    APP_TITLE = os.environ.get("APP_TITLE")
-    APP_FOOTER = os.environ.get("APP_FOOTER")
-    VERSION = os.environ.get("VERSION")
+    # VERSION = os.environ.get("VERSION")

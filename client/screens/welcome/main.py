@@ -14,63 +14,66 @@ class WelcomeScreen(Screen):
 
     running = True
 
-    last_key_pressed = 0
+    key_pressed = None
 
-    def render(self):
+    def display(self):
+        logger.info("Displaying WelcomeScreen")
 
         while self.running:
-            # think about a context manager here with running: ???
-            self.window = self.create_window()
 
-            # remove
+            # think about a context manager here with running: ???
+            self.window = self.create_main_window()
+
             self.window.box()
             self.window.refresh()
 
             # draw welcome screen
-            self.draw_title()
+            self.draw_welcome_screen_text()
 
-            self.refresh()
+            self.window.refresh()
 
-            if self.last_key_pressed == ord("q"):
+            if self.key_pressed == ord("q"):
                 self.running = False
 
-            self.last_key_pressed = self.stdscr.getch()
+            if self.key_pressed == ord("c"):
+                return "LoginScreen"
 
-    def refresh(self):
-        self.window.refresh()
+            if self.key_pressed == curses.KEY_RESIZE:
+                return self.next_screen()
 
-    def create_window(self):
+            self.key_pressed = self.stdscr.getch()
+
+    def draw_welcome_screen_text(self):
+
+        self.draw_welcome_logo_text()
+
+        self.draw_continue_text()
+
+    def draw_continue_text(self):
         height, width = self.get_dimensions(self.stdscr)
 
-        return curses.newwin(height - 2, width - 2, 1, 1)
+        continue_message = " PRESS C TO BEGIN "
+        y, x = get_text_center_y_x(height, width, continue_message)
+        self.window.addstr(height - 5, x, continue_message, curses.A_REVERSE)
 
-    def draw_title(self):
+    def draw_welcome_logo_text(self):
+
         height, width = self.get_dimensions(self.stdscr)
 
-        # welcome message
-        welcome_message = "Welcome to"
-        y, x = get_text_center_y_x(height, width, len(welcome_message))
-        self.window.attron(curses.A_BOLD)
-        self.window.addstr(y - 2, x, welcome_message)
-        self.window.attroff(curses.A_BOLD)
+        logo = [
+            "$$$$$$$\             $$$$$$\  $$\                  $$\     ",
+            "$$  __$$\           $$  __$$\ $$ |                 $$ |    ",
+            "$$ |  $$ |$$\   $$\ $$ /  \__|$$$$$$$\   $$$$$$\ $$$$$$\   ",
+            "$$$$$$$  |$$ |  $$ |$$ |      $$  __$$\  \____$$\\\_$$  _|  ", # had to add an extra \ because it escaped
+            "$$  ____/ $$ |  $$ |$$ |      $$ |  $$ | $$$$$$$ | $$ |    ",
+            "$$ |      $$ |  $$ |$$ |  $$\ $$ |  $$ |$$  __$$ | $$ |$$\ ",
+            "$$ |      \$$$$$$$ |\$$$$$$  |$$ |  $$ |\$$$$$$$ | \$$$$  |",
+            "\__|       \____$$ | \______/ \__|  \__| \_______|  \____/ ",
+            "          $$\   $$ |                                       ",
+            "          \$$$$$$  |                       Version 1.0     ",
+            "           \______/                          (alpha)       "
+        ]
 
-        # app title
-        title = Configuration.APP_TITLE
-        y, x = get_text_center_y_x(height, width, len(title))
-        self.window.attron(curses.A_BOLD)
-        self.window.addstr(y - 1, x, title)
-        self.window.attroff(curses.A_BOLD)
-
-        # continue
-        continue_message = " PRESS ANY KEY TO BEGIN "
-        y, x = get_text_center_y_x(height, width, len(continue_message))
-        self.window.attron(curses.A_REVERSE)
-        self.window.addstr(height - 5, x, continue_message)
-        self.window.attroff(curses.A_REVERSE)
-
-        # debug
-        debug = str(self.last_key_pressed)
-        y, x = get_text_center_y_x(height, width, len(debug))
-        self.window.attron(curses.A_REVERSE)
-        self.window.addstr(y + 3, x, debug)
-        self.window.attroff(curses.A_REVERSE)
+        y, x = get_text_center_y_x(height, width, logo[0])
+        for index, w in enumerate(logo):
+            self.window.addstr(y - len(logo)//2 + index, x - 1, w, curses.A_BOLD)

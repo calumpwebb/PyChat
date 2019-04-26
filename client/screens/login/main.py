@@ -1,29 +1,26 @@
 import curses
+import logging
 
-from screens.base import Screen
+from screens.main import Screen
+
+logger = logging.getLogger(__name__)
 
 
 class LoginScreen(Screen):
+    window = None
 
-    last_key_pressed = 0
-    running = False
+    running = True
 
-    def render(self):
+    key_pressed = None
 
-        height, width = self.get_dimensions(self.stdscr)
-
-        self.running = True
+    def display(self):
+        logger.info("Displaying LoginScreen")
 
         while self.running:
-            # think about a context manager here with running: ???
-            self.window = self.create_window()
 
-            if self.last_key_pressed != ord("q"):
-                self.running = False
+            if self.key_pressed == curses.KEY_RESIZE:
+                return self.next_screen()
 
-            self.last_key_pressed = self.stdscr.getch()
+            self.key_pressed = self.stdscr.getch()
 
-    def create_window(self):
-        height, width = self.stdscr.getmaxyx()
-
-        return curses.newwin(height, width, 0, 0)
+        return "LoginScreen"
