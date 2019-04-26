@@ -32,9 +32,7 @@ class TooSmallScreen(Screen):
             if self.key_pressed == curses.KEY_MOUSE:
                 id, x, y, z, bstate = curses.getmouse()
 
-
             self.key_pressed = self.stdscr.getch()
-
 
 
     def draw_error_message(self):
