@@ -1,10 +1,14 @@
 import curses
 import logging
+
 from utils import get_scr_dimension, screen_too_small
+
 logger = logging.getLogger(__name__)
 
 
 class Screen:
+    #TODO: find a way to include 'state' inside these?
+
     def __init__(self, stdscr, screen_history):
         self.stdscr = stdscr
         self.screen_history = screen_history
@@ -25,7 +29,6 @@ class Screen:
         going to show the next screen which is specified (or return back to the previous screen if already
         showing the 'TooSmallScreen' and screen is now large enough)
         """
-        height, width = self.get_dimensions(self.stdscr)
 
         if screen_too_small(self.stdscr):
             return "TooSmallScreen"

@@ -34,7 +34,6 @@ class TooSmallScreen(Screen):
 
             self.key_pressed = self.stdscr.getch()
 
-
     def draw_error_message(self):
         height, width = self.get_dimensions(self.stdscr)
 

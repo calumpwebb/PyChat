@@ -5,7 +5,6 @@ from screens.errors import TooSmallScreen
 from screens.login import LoginScreen
 from screens.main import MainScreen
 from screens.welcome import WelcomeScreen
-
 from utils import screen_too_small, turn_on_mouse_detection
 
 logging.basicConfig(
@@ -39,7 +38,7 @@ def draw(stdscr):
         screen_states_history.append(current_screen)
 
         if screen_too_small(stdscr):
-            screen_states_history.append('TooSmallScreen')
+            screen_states_history.append("TooSmallScreen")
 
         current_screen = MainScreen(stdscr, screen_states_history).display()
 

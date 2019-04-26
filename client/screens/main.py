@@ -26,7 +26,7 @@ class MainScreen(Screen):
 
     def draw_title(self):
 
-        title = " {} {} ".format('PyChat', 'v1.0')
+        title = " {} {} ".format("PyChat", "v1.0")
 
         self.stdscr.addstr(0, 2, title, curses.A_BOLD)
 
