@@ -29,7 +29,13 @@ class TooSmallScreen(Screen):
             if self.key_pressed == curses.KEY_RESIZE:
                 return self.next_screen()
 
+            if self.key_pressed == curses.KEY_MOUSE:
+                id, x, y, z, bstate = curses.getmouse()
+
+
             self.key_pressed = self.stdscr.getch()
+
+
 
     def draw_error_message(self):
         height, width = self.get_dimensions(self.stdscr)
@@ -38,9 +44,19 @@ class TooSmallScreen(Screen):
         error_message = "YOUR TERMINAL WINDOW IS TOO SMALL"
 
         y, x = get_text_center_y_x(height, width, error_message)
-        self.window.addstr(y - 1, x, error_message, curses.A_BOLD)
+        self.window.addstr(y - 3, x, error_message, curses.A_BOLD)
+
+        # info message
+        info_message = "Required: [height: 40, width: 100]"
+        y, x = get_text_center_y_x(height, width, info_message)
+        self.window.addstr(y - 2, x, info_message)
 
         # help message
-        help_message = "min required [height: 40, width: 100]"
+        help_message = "Please resize your window"
         y, x = get_text_center_y_x(height, width, help_message)
-        self.window.addstr(y, x, help_message)
+        self.window.addstr(y + 1, x, help_message, curses.A_UNDERLINE)
+
+        # current message
+        current_message = "Current: [height: {}, width: {}]".format(height, width)
+        y, x = get_text_center_y_x(height, width, current_message)
+        self.window.addstr(y + 2, x, current_message)

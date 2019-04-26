@@ -6,6 +6,8 @@ from screens.login import LoginScreen
 from screens.main import MainScreen
 from screens.welcome import WelcomeScreen
 
+from utils import screen_too_small, turn_on_mouse_detection
+
 logging.basicConfig(
     filename="logfile.log",
     filemode="a",
@@ -25,15 +27,19 @@ SCREENS = {
 
 def draw(stdscr):
 
+    turn_on_mouse_detection()
+
     current_screen = "WelcomeScreen"
 
-    # todo: work out a better way than this
     screen_states_history = []
 
     while True:
         logger.info("Main loop ran")
+
         screen_states_history.append(current_screen)
-        logger.info(screen_states_history)
+
+        if screen_too_small(stdscr):
+            screen_states_history.append('TooSmallScreen')
 
         current_screen = MainScreen(stdscr, screen_states_history).display()
 

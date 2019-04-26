@@ -1,6 +1,6 @@
 import curses
 import logging
-
+from utils import get_scr_dimension, screen_too_small
 logger = logging.getLogger(__name__)
 
 
@@ -17,7 +17,7 @@ class Screen:
     @staticmethod
     def get_dimensions(screen):
         # todo: might be able to do some caching here?
-        return screen.getmaxyx()
+        return get_scr_dimension(screen)
 
     def next_screen(self):
         """
@@ -27,7 +27,7 @@ class Screen:
         """
         height, width = self.get_dimensions(self.stdscr)
 
-        if width < 100 or height < 40:
+        if screen_too_small(self.stdscr):
             return "TooSmallScreen"
         else:
             # find the last non 'TooSmallScreen' page
@@ -36,6 +36,7 @@ class Screen:
                 if x != "TooSmallScreen":
                     return x
 
+            # if not found at all then do this
             return "WelcomeScreen"
 
     def current_screen(self):

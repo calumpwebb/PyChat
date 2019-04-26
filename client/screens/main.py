@@ -2,7 +2,6 @@ import curses
 import logging
 
 from screens.base import Screen
-from settings import Configuration
 from utils import clear_screen, hide_cursor
 
 logger = logging.getLogger(__name__)
