@@ -6,7 +6,7 @@ from screens.main import Screen
 logger = logging.getLogger(__name__)
 
 
-class LoginScreen(Screen):
+class HomeScreen(Screen):
     window = None
 
     running = True
@@ -21,5 +21,3 @@ class LoginScreen(Screen):
                 return self.dispatch_next_screen()
 
             self.key_pressed = self.stdscr.getch()
-
-        return "LoginScreen"

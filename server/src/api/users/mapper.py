@@ -11,7 +11,4 @@ class UserSchema(Schema):
 
     @post_load
     def make_user(self, data):
-        return db.User(
-            username=data['username'],
-            password=data['password']
-        )
+        return db.User(username=data["username"], password=data["password"])

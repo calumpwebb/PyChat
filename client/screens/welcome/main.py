@@ -3,7 +3,6 @@ import logging
 
 from screens.main import Screen
 from state import dispatch, get_state
-from state.actions.app import set_next_screen
 from state.actions.welcome import set_enter_pressed, set_selected_option
 from utils import get_text_center_y_x
 
@@ -11,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class WelcomeScreen(Screen):
+    namespace = "welcome"
 
     window = None
 
@@ -35,7 +35,7 @@ class WelcomeScreen(Screen):
             if self.key_pressed == curses.KEY_ENTER or self.key_pressed == 10:
                 dispatch(set_enter_pressed(True))
 
-            state = get_state("welcome")
+            state = self.get_state()
 
             self.window = self.create_main_window()
 
@@ -49,7 +49,7 @@ class WelcomeScreen(Screen):
                     # dispatch(set_next_screen('LoginScreen'))
                     raise NotImplementedError()
                 else:
-                    return dispatch(set_next_screen("SignUpScreen"))
+                    return self.dispatch_next_screen("SignUpScreen")
             else:
                 self.draw_switcher(state["selected_option"])
 

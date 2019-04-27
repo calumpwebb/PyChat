@@ -25,7 +25,7 @@ class TokenEndpoint(Resource):
         token_string_start = generate_random_string(8)
         token_string_end = generate_random_string(8)
 
-        token_string = token_string_start + '-' + token_string_end
+        token_string = token_string_start + "-" + token_string_end
 
         session.add(db.UserInviteToken(token_issuer=user, token=token_string))
 

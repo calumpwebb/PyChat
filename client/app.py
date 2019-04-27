@@ -1,8 +1,8 @@
 import curses
 import logging
 
-from screens.errors import TooSmallScreen
-from screens.login import LoginScreen
+from screens.errors import ErrorScreen, TooSmallScreen
+from screens.home import HomeScreen
 from screens.main import MainScreen
 from screens.signup import SignUpScreen
 from screens.welcome import WelcomeScreen
@@ -22,10 +22,14 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 SCREENS = {
-    "WelcomeScreen": WelcomeScreen,
-    "LoginScreen": LoginScreen,
+    # errors
+    "ErrorScreen": ErrorScreen,
     "TooSmallScreen": TooSmallScreen,
+    # login flow
+    "WelcomeScreen": WelcomeScreen,
     "SignUpScreen": SignUpScreen,
+    # main app
+    "HomeScreen": HomeScreen,
 }
 
 store = pydux_store

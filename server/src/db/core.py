@@ -1,9 +1,11 @@
+import datetime
+
 from passlib.hash import bcrypt
 from sqlalchemy import (Boolean, Column, DateTime, ForeignKey, Integer, Text,
                         text)
 from sqlalchemy.ext.declarative import as_declarative
 from sqlalchemy.orm import relationship
-import datetime
+
 
 """
 General guideline:

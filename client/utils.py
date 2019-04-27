@@ -51,3 +51,13 @@ def is_input_char(ordinal, use_symbols):
         return False
     except:
         return False
+
+
+def trim_text(text, max_length):
+    if len(text) < max_length:
+        return text
+
+    trim = '...'
+    text = text[:max_length - 3]
+
+    return text + trim

@@ -1,59 +1,100 @@
 import curses
 import logging
 
+from state import get_state
 from screens.main import Screen
-from utils import get_text_center_y_x
+from utils import get_text_center_y_x, trim_text
 
 logger = logging.getLogger(__name__)
 
 
-class TooSmallScreen(Screen):
+class ErrorScreen(Screen):
+    namespace = "errors"
+
     window = None
 
     key_pressed = None
 
+    # error window
+    error_win = None
+    error_win_height = None
+    error_win_y = None
+    error_win_width = None
+    error_win_x = None
+
     def display(self):
 
         while True:
+            state = self.get_state()
 
             self.window = self.create_main_window()
 
             self.window.box()
             self.window.refresh()
 
-            self.draw_error_message()
+            self.draw_error_box(state)
 
             self.window.refresh()
 
             if self.key_pressed == curses.KEY_RESIZE:
                 return self.dispatch_next_screen()
 
-            if self.key_pressed == curses.KEY_MOUSE:
-                id, x, y, z, bstate = curses.getmouse()
-                logger.info("mouse pressed %s %s %s %s %s", id, x, y, z, bstate)
+            # ESC
+            if self.key_pressed == 27:
+                return self.dispatch_next_screen(state["back_screen"])
 
             self.key_pressed = self.stdscr.getch()
 
-    def draw_error_message(self):
+    def draw_error_box(self, state):
         height, width = self.get_dimensions(self.stdscr)
 
-        # error_message
-        error_message = "YOUR TERMINAL WINDOW IS TOO SMALL"
+        self.error_win_height = height // 3
+        self.error_win_y = height // 3
+        self.error_win_width = width // 2
+        self.error_win_x = width // 2 - self.error_win_width // 2
 
-        y, x = get_text_center_y_x(height, width, error_message)
-        self.window.addstr(y - 3, x, error_message, curses.A_BOLD)
+        # self.form_height, self.form_width, self.form_y, self.form_x
+        self.error_win = self.stdscr.subwin(
+            self.error_win_height, self.error_win_width, self.error_win_y, self.error_win_x
+        )
 
-        # info message
-        info_message = "Required: [height: 40, width: 100]"
-        y, x = get_text_center_y_x(height, width, info_message)
-        self.window.addstr(y - 2, x, info_message)
+        self.error_win.box()
 
-        # help message
-        help_message = "Please resize your window"
-        y, x = get_text_center_y_x(height, width, help_message)
-        self.window.addstr(y + 1, x, help_message, curses.A_UNDERLINE)
+        self.draw_title()
 
-        # current message
-        current_message = "Current: [height: {}, width: {}]".format(height, width)
-        y, x = get_text_center_y_x(height, width, current_message)
-        self.window.addstr(y + 2, x, current_message)
+        self.draw_message(trim_text(state["message"], self.error_win_width - 5))
+        self.draw_footer()
+
+        self.error_win.refresh()
+
+    def draw_title(self):
+        height, width = self.get_dimensions(self.error_win)
+
+        title = [
+            "  ______                     ",
+            " |  ____|                    ",
+            " | |__   _ __ _ __ ___  _ __ ",
+            " |  __| | '__| '__/ _ \| '__|",
+            " | |____| |  | | | (_) | |   ",
+            " |______|_|  |_|  \___/|_|   ",
+        ]
+
+        y, x = get_text_center_y_x(height, width, title[0])
+        for index, w in enumerate(title):
+            self.error_win.addstr(2 + index, x, w, curses.A_BOLD)
+
+    def draw_message(self, message):
+        height, width = self.get_dimensions(self.error_win)
+
+        y, x = get_text_center_y_x(height, width, message)
+
+        self.error_win.addstr(height - 4, x, message, curses.A_BOLD)
+
+    def draw_footer(self):
+        message = " Press ESC to go back "
+        height, width = self.get_dimensions(self.error_win)
+
+        y, x = get_text_center_y_x(height, width, message)
+
+        self.error_win.addstr(height - 1, x, message)
+        self.error_win.addstr(0, x, message)

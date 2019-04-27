@@ -1,10 +1,10 @@
 import curses
 import logging
+from exceptions import ApplicationError
 
-from api import post_user_sign_up, authenticate_user
 from screens.main import Screen
 from state import dispatch, get_state
-from state.actions.app import set_jwt_token, set_next_screen
+from state.actions.app import set_jwt_token
 from state.actions.signup import set_input_data_value, set_selected_option
 from utils import get_text_center_y_x, is_input_char
 
@@ -12,9 +12,10 @@ logger = logging.getLogger(__name__)
 
 
 class SignUpScreen(Screen):
-    window = None
+    namespace = "signup"
 
-    running = True
+    # TODO: this really needs to be refactored..
+    window = None
 
     key_pressed = 0
 
@@ -25,7 +26,13 @@ class SignUpScreen(Screen):
     form_x = None
     form_y = None
 
-    form_inputs = ["username", "password", "confirm_password", "invitation_token", "button"]
+    form_inputs = [
+        "username",
+        "password",
+        "confirm_password",
+        "invitation_token",
+        "button",
+    ]
 
     def display(self):
 
@@ -34,7 +41,7 @@ class SignUpScreen(Screen):
             if self.key_pressed == curses.KEY_RESIZE:
                 return self.dispatch_next_screen()
 
-            state = get_state("signup")
+            state = self.get_state()
 
             if state["selected_option"] != "button":
                 # keyboard input
@@ -66,26 +73,8 @@ class SignUpScreen(Screen):
                         )
             else:
                 if self.key_pressed == curses.KEY_ENTER or self.key_pressed == 10:
-                    if (
-                        len(state["password"]) > 8
-                        and state["confirm_password"] == state["password"] and
-                        state["username"] != "" and state["invitation_token"] != ""
-                    ):
-
-                        sign_up_response = post_user_sign_up(
-                            state["username"], state["password"], state["invitation_token"]
-                        )
-
-                        if sign_up_response.status_code == 200:
-                            # make auth request
-                            auth_response = authenticate_user(state["username"], state["password"])
-
-                            if auth_response.status_code == 200:
-                                json = auth_response.json()
-
-                                dispatch(set_jwt_token(json['access_token']))
-                                dispatch(set_next_screen('MainMenu'))
-                                return self.dispatch_next_screen()
+                    if self.can_continue():
+                        return self.handle_user_sign_up(state)
 
             # tab and down
             if self.key_pressed == 9 or self.key_pressed == 258:
@@ -110,7 +99,7 @@ class SignUpScreen(Screen):
 
                 dispatch(set_selected_option(self.form_inputs[index]))
 
-            state = get_state("signup")
+            state = self.get_state()
 
             self.window = self.create_main_window()
 
@@ -162,7 +151,9 @@ class SignUpScreen(Screen):
             offset=15,
         )
 
-        self.draw_continue_button(state["selected_option"] == "button", 20)
+        self.draw_continue_button(
+            state["selected_option"] == "button", offset=20, enabled=self.can_continue()
+        )
 
         self.form_win.refresh()
 
@@ -188,7 +179,7 @@ class SignUpScreen(Screen):
                 curses.A_BOLD,
             )
 
-    def draw_continue_button(self, selected, offset=0):
+    def draw_continue_button(self, selected, offset=0, enabled=False):
         height, width = self.get_dimensions(self.form_win)
 
         button_win_height_y = self.form_y + 9 + offset
@@ -216,17 +207,20 @@ class SignUpScreen(Screen):
         else:
             button_win.box()
 
-        # todo: change when not
-        text = "Sign Up"
-
         if selected:
-            text = "Press ENTER to continue!"
+            if enabled:
+                text = "Press ENTER to continue!"
+            else:
+                text = "All Fields Required"
 
             button_win.addstr(
                 2, button_win_width // 2 - len(text) // 2, text, curses.A_BOLD
             )
         else:
-            text = "CONTINUE!"
+            if enabled:
+                text = "CONTINUE!"
+            else:
+                text = "All Fields Required"
 
             button_win.addstr(2, button_win_width // 2 - len(text) // 2, text)
         button_win.refresh()
@@ -281,3 +275,52 @@ class SignUpScreen(Screen):
                 input_win.addstr(input_win_height - 1, x, error)
 
         input_win.refresh()
+
+    def handle_user_sign_up(self, state):
+        try:
+
+            sign_up_response = self.api_client.post_user_sign_up(
+                state["username"], state["password"], state["invitation_token"]
+            )
+
+            if sign_up_response.status_code == 200:
+                # user successfully added
+
+                auth_response = self.api_client.authenticate_user(
+                    state["username"], state["password"]
+                )
+
+                if auth_response.status_code == 200:
+                    json = auth_response.json()
+                    dispatch(set_jwt_token(json["access_token"]))
+                    self.dispatch_next_screen("HomeScreen")
+                else:
+                    raise ApplicationError("Unable to Log In")
+            else:
+                if sign_up_response.status_code == 409:
+                    self.dispatch_error_next_screen(
+                        "Username already taken, try again!",
+                        "SignUpScreen"
+                    )
+
+                if sign_up_response.status_code == 401:
+                    self.dispatch_error_next_screen(
+                        "Invitation token is not valid, try again!",
+                        "SignUpScreen"
+                    )
+
+        except Exception as e:
+            logger.exception(e)
+            pass
+
+        return False
+
+    def can_continue(self):
+        state = self.get_state()
+
+        return (
+            len(state["password"]) > 8
+            and state["confirm_password"] == state["password"]
+            and state["username"] != ""
+            and state["invitation_token"] != ""
+        )

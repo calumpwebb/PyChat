@@ -1,9 +1,9 @@
 from flask import request
-from flask_restplus import Namespace, Resource
-from sqlalchemy import desc, func
+from flask_restplus import Namespace, Resource, abort
+from sqlalchemy import func
 
 from src import config, db
-from src.api.exceptions import NotAuthorised, MissingParameters
+from src.api.exceptions import MissingParameters, UserAlreadyExists, UserTokenInvalid
 from src.api.users.mapper import UserSchema
 
 namespace = Namespace("")
@@ -24,24 +24,28 @@ class UsersEndpoint(Resource):
         }
         """
         # todo: really not happy with this function in general :(
-
         json_data = request.get_json()
 
         if json_data:
-            invitation_token = json_data.get('invitation_token')
+            invitation_token = json_data.get("invitation_token")
 
             if invitation_token is None:
-                return MissingParameters(['invitation_token'])
-            del json_data['invitation_token']
+                abort()
+                return MissingParameters(["invitation_token"])
+            del json_data["invitation_token"]
         else:
-            return MissingParameters(['invitation_token', 'username', 'password'])
+            return MissingParameters(["invitation_token", "username", "password"])
 
         session = config.get_session()
 
-        token = session.query(db.UserInviteToken).filter_by(token=invitation_token).one_or_none()
+        token = (
+            session.query(db.UserInviteToken)
+            .filter_by(token=invitation_token)
+            .one_or_none()
+        )
 
         if not token:
-            return NotAuthorised()
+            return UserTokenInvalid()
 
         new_user = UserSchema().load(json_data)
 
@@ -53,7 +57,7 @@ class UsersEndpoint(Resource):
         )
 
         if check_user:
-            return NotAuthorised()
+            return UserAlreadyExists(check_user.username)
 
         session.add(new_user)
         token.set_used(new_user)

@@ -1,5 +1,6 @@
 # TODO: Implment proper exceptions here
 from json import JSONEncoder
+from flask_restplus import abort
 
 # https://stackoverflow.com/questions/3768895/how-to-make-a-class-json-serializable
 # This will monkey-patch json module when it's imported so JSONEncoder.default()
@@ -18,16 +19,9 @@ class JsonSerializable(object):
     message = None
     status_code = None
 
-    def __init__(self, payload=None):
-        self.payload = payload
-
     def to_json(self):
-        result = {"message": self.message, "status_code": self.status_code}
-
-        if self.payload:
-            result["payload"] = self.payload
-
-        return result
+        # bit of a hack here but it works nicely
+        abort(self.status_code, message=self.message)
 
 
 class MissingParameters(JsonSerializable):
@@ -36,7 +30,21 @@ class MissingParameters(JsonSerializable):
     def __init__(self, missing_params):
         super().__init__()
 
-        self.message = ['{} is required'.format(param) for param in missing_params]
+        self.message = ["{} is required".format(param) for param in missing_params]
+
+
+class UserAlreadyExists(JsonSerializable):
+    status_code = 409
+
+    def __init__(self, username):
+        super().__init__()
+
+        self.message = "username '{}' already exists".format(username)
+
+
+class UserTokenInvalid(JsonSerializable):
+    status_code = 401
+    message = "Invite Token not valid"
 
 
 class NotAuthorised(JsonSerializable):
