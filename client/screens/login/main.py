@@ -5,16 +5,16 @@ from exceptions import ApplicationError
 from screens.main import Screen
 from state import dispatch
 from state.actions.app import set_jwt_token
-from state.actions.signup import set_input_data_value, set_selected_option
+from state.actions.login import set_input_data_value, set_selected_option
 from utils import get_text_center_y_x, is_input_char
 
 logger = logging.getLogger(__name__)
 
 
-class SignUpScreen(Screen):
-    namespace = "signup"
+class LoginScreen(Screen):
+    namespace = "login"
 
-    # TODO: this really needs to be refactored..
+    # TODO: this really needs to be refactored along with the setup component
     window = None
 
     key_pressed = 0
@@ -29,14 +29,13 @@ class SignUpScreen(Screen):
     form_inputs = [
         "username",
         "password",
-        "confirm_password",
-        "invitation_token",
         "button",
     ]
 
     def display(self):
 
         while True:
+            logger.info('i loaded the login page')
             logger.info("key pressed %s", self.key_pressed)
             if self.key_pressed == curses.KEY_RESIZE:
                 return self.dispatch_next_screen()
@@ -74,7 +73,7 @@ class SignUpScreen(Screen):
             else:
                 if self.key_pressed == curses.KEY_ENTER or self.key_pressed == 10:
                     if self.can_continue():
-                        return self.handle_user_sign_up(state)
+                        return self.handle_user_login(state)
 
             # tab and down
             if self.key_pressed == 9 or self.key_pressed == 258:
@@ -112,7 +111,7 @@ class SignUpScreen(Screen):
     def draw_sign_up_form(self, state):
         height, width = self.get_dimensions(self.window)
 
-        self.form_height = 35
+        self.form_height = 30
         self.form_width = 60
         self.form_x = width // 2 - self.form_width // 2
         self.form_y = height // 2 - self.form_height // 2
@@ -135,24 +134,9 @@ class SignUpScreen(Screen):
             hide_input=True,
             offset=5,
         )
-        self.draw_input_box(
-            " Confirm Password ",
-            state["selected_option"] == "confirm_password",
-            state["confirm_password"],
-            hide_input=True,
-            offset=10,
-            confirm=state["password"],
-        )
-
-        self.draw_input_box(
-            " Invite Token ",
-            state["selected_option"] == "invitation_token",
-            state["invitation_token"],
-            offset=15,
-        )
 
         self.draw_continue_button(
-            state["selected_option"] == "button", offset=20, enabled=self.can_continue()
+            state["selected_option"] == "button", offset=14, enabled=self.can_continue()
         )
 
         self.form_win.refresh()
@@ -161,12 +145,14 @@ class SignUpScreen(Screen):
         height, width = self.get_dimensions(self.form_win)
 
         title = [
-            " ____  _               _   _       ",
-            "/ ___|(_) __ _ _ __   | | | |_ __  ",
-            "\___ \| |/ _` | '_ \  | | | | '_ \ ",
-            " ___) | | (_| | | | | | |_| | |_) |",
-            "|____/|_|\__, |_| |_|  \___/| .__/ ",
-            "         |___/              |_|    ",
+            " _                 _       ",
+            "| |               (_)      ",
+            "| |     ___   __ _ _ _ __  ",
+            "| |    / _ \ / _` | | '_ \ ",
+            "| |___| (_) | (_| | | | | |",
+            "\_____/\___/ \__, |_|_| |_|",
+            "              __/ |        ",
+            "             |___/         "
         ]
 
         y, x = get_text_center_y_x(height, width, title[0])
@@ -209,7 +195,7 @@ class SignUpScreen(Screen):
 
         if selected:
             if enabled:
-                text = "Press ENTER to continue!"
+                text = "Press ENTER to login!"
             else:
                 text = "All Fields Required"
 
@@ -218,7 +204,7 @@ class SignUpScreen(Screen):
             )
         else:
             if enabled:
-                text = "CONTINUE!"
+                text = "LOGIN!"
             else:
                 text = "All Fields Required"
 
@@ -226,11 +212,11 @@ class SignUpScreen(Screen):
         button_win.refresh()
 
     def draw_input_box(
-        self, title, selected, text, hide_input=False, offset=0, confirm=None
+        self, title, selected, text, hide_input=False, offset=0,
     ):
         height, width = self.get_dimensions(self.form_win)
 
-        input_win_height_y = self.form_y + 9 + offset
+        input_win_height_y = self.form_y + 12 + offset
         input_win_height = 4
         input_win_width = 50
 
@@ -264,51 +250,23 @@ class SignUpScreen(Screen):
             input_win.addstr(0, x, title)
             input_win.addstr(text_y, text_x, text_to_display)
 
-        if confirm:
-            if text != "" and confirm != text:
-                error = " Passwords do not match "
-                y, x = get_text_center_y_x(1, input_win_width, error)
-                input_win.addstr(input_win_height - 1, x, error)
-            elif len(confirm) < 8:
-                error = " Passwords must be at least 8 char "
-                y, x = get_text_center_y_x(1, input_win_width, error)
-                input_win.addstr(input_win_height - 1, x, error)
-
         input_win.refresh()
 
-    def handle_user_sign_up(self, state):
+    def handle_user_login(self, state):
         try:
-
-            sign_up_response = self.api_client.post_user_sign_up(
-                state["username"], state["password"], state["invitation_token"]
+            auth_response = self.api_client.authenticate_user(
+                state["username"], state["password"]
             )
 
-            if sign_up_response.status_code == 200:
-                # user successfully added
-
-                auth_response = self.api_client.authenticate_user(
-                    state["username"], state["password"]
+            if auth_response.status_code == 200:
+                json = auth_response.json()
+                dispatch(set_jwt_token(json["access_token"]))
+                self.dispatch_next_screen("HomeScreen")
+            elif auth_response.status_code == 401:
+                self.dispatch_error_next_screen(
+                    "Username or Password is incorrect!",
+                    "LoginScreen"
                 )
-
-                if auth_response.status_code == 200:
-                    json = auth_response.json()
-                    dispatch(set_jwt_token(json["access_token"]))
-                    self.dispatch_next_screen("HomeScreen")
-                else:
-                    raise ApplicationError("Unable to Log In")
-            else:
-                if sign_up_response.status_code == 409:
-                    self.dispatch_error_next_screen(
-                        "Username already taken, try again!",
-                        "SignUpScreen"
-                    )
-
-                if sign_up_response.status_code == 401:
-                    self.dispatch_error_next_screen(
-                        "Invitation token is not valid, try again!",
-                        "SignUpScreen"
-                    )
-
         except Exception as e:
             logger.exception(e)
             pass
@@ -319,8 +277,5 @@ class SignUpScreen(Screen):
         state = self.get_state()
 
         return (
-            len(state["password"]) > 8
-            and state["confirm_password"] == state["password"]
-            and state["username"] != ""
-            and state["invitation_token"] != ""
+            state["username"] != "" and state["password"] != ""
         )

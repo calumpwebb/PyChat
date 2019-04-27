@@ -1,9 +1,8 @@
 import curses
 import logging
 
-from state import get_state
 from screens.main import Screen
-from utils import get_text_center_y_x, trim_text
+from utils import get_text_center_y_x, trim_text, is_input_char
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +24,7 @@ class ErrorScreen(Screen):
     def display(self):
 
         while True:
+            logger.info('error menu looped')
             state = self.get_state()
 
             self.window = self.create_main_window()
@@ -40,7 +40,8 @@ class ErrorScreen(Screen):
                 return self.dispatch_next_screen()
 
             # ESC
-            if self.key_pressed == 27:
+            if is_input_char(self.key_pressed, True):
+                logger.info('i pressed esc')
                 return self.dispatch_next_screen(state["back_screen"])
 
             self.key_pressed = self.stdscr.getch()
@@ -91,7 +92,7 @@ class ErrorScreen(Screen):
         self.error_win.addstr(height - 4, x, message, curses.A_BOLD)
 
     def draw_footer(self):
-        message = " Press ESC to go back "
+        message = " Press ANY KEY to dismiss "
         height, width = self.get_dimensions(self.error_win)
 
         y, x = get_text_center_y_x(height, width, message)
