@@ -6,6 +6,7 @@ from screens.home import HomeScreen
 from screens.main import MainScreen
 from screens.signup import SignUpScreen
 from screens.login import LoginScreen
+from screens.invite import InviteScreen
 from screens.welcome import WelcomeScreen
 from state import dispatch, get_state
 from state import store as pydux_store
@@ -32,6 +33,7 @@ SCREENS = {
     "LoginScreen": LoginScreen,
     # main app
     "HomeScreen": HomeScreen,
+    "InviteScreen": InviteScreen
 }
 
 store = pydux_store

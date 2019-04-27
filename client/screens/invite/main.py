@@ -3,23 +3,26 @@ import logging
 
 from screens.main import Screen
 
+
 logger = logging.getLogger(__name__)
 
 
-class HomeScreen(Screen):
+class InviteScreen(Screen):
+    namespace = "invite"
+
     window = None
 
-    running = True
+    key_pressed = 0
 
-    key_pressed = None
+    # form elements
 
     def display(self):
 
-        while self.running:
+        while True:
 
+            logger.info("key pressed %s", self.key_pressed)
             if self.key_pressed == curses.KEY_RESIZE:
                 return self.dispatch_next_screen()
 
-            return self.dispatch_next_screen("InviteScreen")
-
             self.key_pressed = self.stdscr.getch()
+
