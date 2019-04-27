@@ -17,3 +17,10 @@ class Configuration(object):
     )
 
     API_URL = os.environ.get("API_URL")
+    ENV = os.environ.get("ENV", "PROD")
+
+    # allows us to skip log in when in dev mode
+    SKIP_LOGIN = os.environ.get("SKIP_LOGIN", "false").lower() == "true"
+    DEV_USERNAME = os.environ.get("DEV_USERNAME")
+    DEV_PASSWORD = os.environ.get("DEV_PASSWORD")
+
