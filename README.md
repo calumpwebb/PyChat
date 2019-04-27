@@ -6,3 +6,5 @@
 
 PyChat is going to be an Open Source Terminal Based Messenger system but currently is still in the super early stages of development and architecture decisions.
 
+<h3 align="center"> Screen Shots of Progress </h3>
+<img src="https://github.com/calumpwebb/PyChat/blob/master/img/screenshots/LoginScreen.png" width="50%" title="LoginScreen><img src="https://github.com/calumpwebb/PyChat/blob/master/img/screenshots/LoginScreen.png" width="50%" title="LoginScreen">
