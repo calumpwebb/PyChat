@@ -11,7 +11,7 @@ from screens.welcome import WelcomeScreen
 from state import dispatch, get_state
 from state import store as pydux_store
 from state.actions.app import set_next_screen
-from utils import screen_too_small, turn_on_mouse_detection
+from utils import screen_too_small, turn_on_mouse_detection, skip_login_flow_if_necessary
 
 logging.basicConfig(
     filename="logfile.log",
@@ -38,10 +38,11 @@ SCREENS = {
 
 store = pydux_store
 
-
 def draw(stdscr):
 
     turn_on_mouse_detection()
+
+    skip_login_flow_if_necessary()
 
     # This loops when the screen re sizes
     while True:

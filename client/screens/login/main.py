@@ -1,6 +1,5 @@
 import curses
 import logging
-from exceptions import ApplicationError
 
 from screens.main import Screen
 from state import dispatch
