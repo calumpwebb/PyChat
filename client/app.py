@@ -3,15 +3,16 @@ import logging
 
 from screens.errors import ErrorScreen, TooSmallScreen
 from screens.home import HomeScreen
+from screens.invite import InviteScreen
+from screens.login import LoginScreen
 from screens.main import MainScreen
 from screens.signup import SignUpScreen
-from screens.login import LoginScreen
-from screens.invite import InviteScreen
 from screens.welcome import WelcomeScreen
 from state import dispatch, get_state
 from state import store as pydux_store
 from state.actions.app import set_next_screen
-from utils import screen_too_small, turn_on_mouse_detection, skip_login_flow_if_necessary
+from utils import (screen_too_small, skip_login_flow_if_necessary,
+                   turn_on_mouse_detection)
 
 logging.basicConfig(
     filename="logfile.log",
@@ -33,10 +34,11 @@ SCREENS = {
     "LoginScreen": LoginScreen,
     # main app
     "HomeScreen": HomeScreen,
-    "InviteScreen": InviteScreen
+    "InviteScreen": InviteScreen,
 }
 
 store = pydux_store
+
 
 def draw(stdscr):
 

@@ -12,6 +12,10 @@ class TooSmallScreen(Screen):
 
     key_pressed = None
 
+    @property
+    def class_name(self):
+        return "TooSmallScreen"
+
     def display(self):
 
         while True:

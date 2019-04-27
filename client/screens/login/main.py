@@ -25,16 +25,16 @@ class LoginScreen(Screen):
     form_x = None
     form_y = None
 
-    form_inputs = [
-        "username",
-        "password",
-        "button",
-    ]
+    form_inputs = ["username", "password", "button"]
+
+    @property
+    def class_name(self):
+        return "LoginScreen"
 
     def display(self):
 
         while True:
-            logger.info('i loaded the login page')
+            logger.info("i loaded the login page")
             logger.info("key pressed %s", self.key_pressed)
             if self.key_pressed == curses.KEY_RESIZE:
                 return self.dispatch_next_screen()
@@ -151,7 +151,7 @@ class LoginScreen(Screen):
             "| |___| (_) | (_| | | | | |",
             "\_____/\___/ \__, |_|_| |_|",
             "              __/ |        ",
-            "             |___/         "
+            "             |___/         ",
         ]
 
         y, x = get_text_center_y_x(height, width, title[0])
@@ -210,9 +210,7 @@ class LoginScreen(Screen):
             button_win.addstr(2, button_win_width // 2 - len(text) // 2, text)
         button_win.refresh()
 
-    def draw_input_box(
-        self, title, selected, text, hide_input=False, offset=0,
-    ):
+    def draw_input_box(self, title, selected, text, hide_input=False, offset=0):
         height, width = self.get_dimensions(self.form_win)
 
         input_win_height_y = self.form_y + 12 + offset
@@ -263,8 +261,7 @@ class LoginScreen(Screen):
                 self.dispatch_next_screen("HomeScreen")
             elif auth_response.status_code == 401:
                 self.dispatch_error_next_screen(
-                    "Username or Password is incorrect!",
-                    "LoginScreen"
+                    "Username or Password is incorrect!", "LoginScreen"
                 )
         except Exception as e:
             logger.exception(e)
@@ -275,6 +272,4 @@ class LoginScreen(Screen):
     def can_continue(self):
         state = self.get_state()
 
-        return (
-            state["username"] != "" and state["password"] != ""
-        )
+        return state["username"] != "" and state["password"] != ""

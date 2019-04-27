@@ -2,7 +2,7 @@ import curses
 import logging
 
 from screens.main import Screen
-from utils import get_text_center_y_x, trim_text, is_input_char
+from utils import get_text_center_y_x, is_input_char, trim_text
 
 logger = logging.getLogger(__name__)
 
@@ -21,10 +21,14 @@ class ErrorScreen(Screen):
     error_win_width = None
     error_win_x = None
 
+    @property
+    def class_name(self):
+        return "ErrorScreen"
+
     def display(self):
 
         while True:
-            logger.info('error menu looped')
+            logger.info("error menu looped")
             state = self.get_state()
 
             self.window = self.create_main_window()
@@ -41,7 +45,7 @@ class ErrorScreen(Screen):
 
             # ESC
             if is_input_char(self.key_pressed, True):
-                logger.info('i pressed esc')
+                logger.info("i pressed esc")
                 return self.dispatch_next_screen(state["back_screen"])
 
             self.key_pressed = self.stdscr.getch()
@@ -56,7 +60,10 @@ class ErrorScreen(Screen):
 
         # self.form_height, self.form_width, self.form_y, self.form_x
         self.error_win = self.stdscr.subwin(
-            self.error_win_height, self.error_win_width, self.error_win_y, self.error_win_x
+            self.error_win_height,
+            self.error_win_width,
+            self.error_win_y,
+            self.error_win_x,
         )
 
         self.error_win.box()

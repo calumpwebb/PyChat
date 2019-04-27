@@ -13,6 +13,10 @@ class HomeScreen(Screen):
 
     key_pressed = None
 
+    @property
+    def class_name(self):
+        return "HomeScreen"
+
     def display(self):
 
         while self.running:

@@ -7,11 +7,7 @@ logger = logging.getLogger(__name__)
 
 def login(state=None, action=None):
     if state is None:
-        state = {
-            "selected_option": "username",
-            "username": "",
-            "password": ""
-        }
+        state = {"selected_option": "username", "username": "", "password": ""}
 
     if action["type"] == "login_set_selected_option":
         state = set_selected_option(state, action)

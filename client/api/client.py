@@ -2,6 +2,14 @@ from api import Base
 
 
 class ApiClient(Base):
+
+    # todo: maybe split this file into multiple with each namespace?
+    """
+
+    Login Flow
+
+    """
+
     def authenticate_user(self, username, password):
         post_data = {"username": username, "password": password}
 
@@ -14,3 +22,15 @@ class ApiClient(Base):
             "invitation_token": invitation_token,
         }
         return self.post_request(self.USERS_URL, post_data)
+
+    """
+    
+    Tokens
+    
+    """
+
+    def get_all_tokens(self):
+        return self.get_request(self.TOKENS_URL)
+
+    def get_new_token(self):
+        return self.get_request(self.TOKEN_URL)

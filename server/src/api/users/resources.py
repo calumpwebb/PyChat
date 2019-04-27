@@ -3,7 +3,8 @@ from flask_restplus import Namespace, Resource, abort
 from sqlalchemy import func
 
 from src import config, db
-from src.api.exceptions import MissingParameters, UserAlreadyExists, UserTokenInvalid
+from src.api.exceptions import (MissingParameters, UserAlreadyExists,
+                                UserTokenInvalid)
 from src.api.users.mapper import UserSchema
 
 namespace = Namespace("")
