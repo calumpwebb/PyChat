@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 
 class MainScreen(Screen):
     def display(self):
-        logger.info("Displaying MainScreen")
         clear_screen(self.stdscr)
         hide_cursor()
 

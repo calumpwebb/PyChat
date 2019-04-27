@@ -1,5 +1,8 @@
 import curses
 
+letters_and_numbers = "abcdefghijklmnopqrstuvwxyz0123456789"
+symbols = "±!@$%^&*()_+=-€#`~,.<>/?;:' |{}[]\\"
+
 
 def clear_screen(scr):
     scr.clear()
@@ -32,3 +35,19 @@ def screen_too_small(scr):
     min_width = 100
 
     return height < min_height or width < min_width
+
+
+def is_input_char(ordinal, use_symbols):
+
+    accepted_chars = letters_and_numbers
+
+    if use_symbols:
+        accepted_chars = accepted_chars + symbols
+
+    try:
+        if chr(ordinal).lower() in accepted_chars:
+            return True
+
+        return False
+    except:
+        return False

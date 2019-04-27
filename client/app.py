@@ -4,7 +4,11 @@ import logging
 from screens.errors import TooSmallScreen
 from screens.login import LoginScreen
 from screens.main import MainScreen
+from screens.signup import SignUpScreen
 from screens.welcome import WelcomeScreen
+from state import dispatch, get_state
+from state import store as pydux_store
+from state.actions.app import set_next_screen
 from utils import screen_too_small, turn_on_mouse_detection
 
 logging.basicConfig(
@@ -21,33 +25,33 @@ SCREENS = {
     "WelcomeScreen": WelcomeScreen,
     "LoginScreen": LoginScreen,
     "TooSmallScreen": TooSmallScreen,
+    "SignUpScreen": SignUpScreen,
 }
+
+store = pydux_store
 
 
 def draw(stdscr):
 
     turn_on_mouse_detection()
 
-    current_screen = "WelcomeScreen"
-
-    screen_states_history = []
-
+    # This loops when the screen re sizes
     while True:
-        logger.info("Main loop ran")
 
-        screen_states_history.append(current_screen)
+        logger.info("Main Loop Executed")
 
+        # fixes bug where on startup screen can be too small, this is appended to the states on purpose
+        # so that it correctly re renders inside the MainScreen layout
         if screen_too_small(stdscr):
-            screen_states_history.append("TooSmallScreen")
+            dispatch(set_next_screen("TooSmallScreen"))
 
-        current_screen = MainScreen(stdscr, screen_states_history).display()
+        # draw the MainScreen outline
+        MainScreen(stdscr).display()
 
-        scr = SCREENS[current_screen]
+        current_screen = get_state("app")["current_screen"]
 
-        # display function should return the next screen
-        next_screen = scr(stdscr, screen_states_history).display()
-
-        current_screen = next_screen
+        # display function should dispatch current_screen
+        SCREENS[current_screen](stdscr).display()
 
 
 if __name__ == "__main__":

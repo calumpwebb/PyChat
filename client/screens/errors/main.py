@@ -13,7 +13,6 @@ class TooSmallScreen(Screen):
     key_pressed = None
 
     def display(self):
-        logger.info("Displaying TooSmallScreen")
 
         while True:
 
@@ -27,10 +26,11 @@ class TooSmallScreen(Screen):
             self.window.refresh()
 
             if self.key_pressed == curses.KEY_RESIZE:
-                return self.next_screen()
+                return self.dispatch_next_screen()
 
             if self.key_pressed == curses.KEY_MOUSE:
                 id, x, y, z, bstate = curses.getmouse()
+                logger.info("mouse pressed %s %s %s %s %s", id, x, y, z, bstate)
 
             self.key_pressed = self.stdscr.getch()
 

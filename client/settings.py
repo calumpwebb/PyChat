@@ -16,4 +16,4 @@ class Configuration(object):
         os.path.join(os.path.dirname(os.path.abspath(__file__)), "../")
     )
 
-    # VERSION = os.environ.get("VERSION")
+    API_URL = os.environ.get("API_URL")
