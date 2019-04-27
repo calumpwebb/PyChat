@@ -22,7 +22,7 @@ class WelcomeScreen(Screen):
         #  windows and renders them again for this screen?
 
         while True:
-
+            logger.info('i loaded the welcome page page')
             if self.key_pressed == curses.KEY_LEFT:
                 dispatch(set_selected_option("login"))
 
@@ -46,8 +46,7 @@ class WelcomeScreen(Screen):
                 dispatch(set_enter_pressed(False))
 
                 if state["selected_option"] == "login":
-                    # dispatch(set_next_screen('LoginScreen'))
-                    raise NotImplementedError()
+                    return self.dispatch_next_screen("LoginScreen")
                 else:
                     return self.dispatch_next_screen("SignUpScreen")
             else:
