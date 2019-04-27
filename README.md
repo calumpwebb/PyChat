@@ -8,5 +8,9 @@ PyChat is going to be an Open Source Terminal Based Messenger system but current
 
 <h3 align="center"> Screen Shots of Progress </h3>
 <p align="center">
-  <img src="https://github.com/calumpwebb/PyChat/blob/master/img/screenshots/LoginScreen.png" width="49%" title="LoginScreen">   <img src="https://github.com/calumpwebb/PyChat/blob/master/img/screenshots/SignUpScreen.png" width="49%" title="SignUpScreen">
+  <img src="https://github.com/calumpwebb/PyChat/blob/master/img/screenshots/WelcomeScreen.png" width="49%" title="WelcomeScreen">
+  <img src="https://github.com/calumpwebb/PyChat/blob/master/img/screenshots/SignUpScreen.png" width="49%" title="SignUpScreen">
+</p>
+<p align="center">
+  <img src="https://github.com/calumpwebb/PyChat/blob/master/img/screenshots/ErrorScreen.png" width="49%" title="LoginScreen">
 </p>
