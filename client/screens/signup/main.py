@@ -227,6 +227,7 @@ class SignUpScreen(Screen):
                 text = "All Fields Required"
 
             button_win.addstr(2, button_win_width // 2 - len(text) // 2, text)
+
         button_win.refresh()
 
     def draw_input_box(

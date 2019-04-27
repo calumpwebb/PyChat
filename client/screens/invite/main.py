@@ -61,9 +61,7 @@ class InviteScreen(Screen):
 
             dispatch(set_all_invites(all_invites))
         else:
-            raise ApplicationError(
-                "get_all_tokens responded with non 200 status code"
-            )
+            raise ApplicationError("get_all_tokens responded with non 200 status code")
 
     def handle_key_presses(self):
         state = self.get_state()
@@ -96,7 +94,7 @@ class InviteScreen(Screen):
         if self.key_pressed == curses.KEY_ENTER or self.key_pressed == 10:
             if state["selected_option"] == "back":
                 # todo: GO BACK A SCREEN! (not sure what screen yet)
-                raise NotImplementedError('Not implemented back button on invite page')
+                raise NotImplementedError("Not implemented back button on invite page")
             elif state["selected_option"] == "invite":
                 # todo: get new token!
                 response = self.api_client.get_new_token()
