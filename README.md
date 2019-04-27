@@ -18,5 +18,6 @@ Currently I haven't made it possible for anyone other than myself to run but pla
   <img src="https://github.com/calumpwebb/PyChat/blob/master/img/screenshots/SignUpScreen.png" width="49%" title="SignUpScreen">
 </p>
 <p align="center">
-  <img src="https://github.com/calumpwebb/PyChat/blob/master/img/screenshots/ErrorScreen.png" width="49%" title="LoginScreen">
+  <img src="https://github.com/calumpwebb/PyChat/blob/master/img/screenshots/ErrorScreen.png" width="49%" title="ErrorScreen">
+  <img src="https://github.com/calumpwebb/PyChat/blob/master/img/screenshots/LoginScreen.png" width="49%" title="LoginScreen">
 </p>
