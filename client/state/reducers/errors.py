@@ -23,4 +23,3 @@ def set_error_message(state, action):
 
 def set_back_screen(state, action):
     return extend(state, {"back_screen": action["value"]})
-

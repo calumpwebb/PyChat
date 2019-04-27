@@ -2,7 +2,7 @@ from marshmallow import Schema, fields
 
 
 class UserTokenSchema(Schema):
-    created_datetime = fields.DateTime(required=True)
+    created_datetime = fields.String(required=True)
 
     token_issuer_id = fields.Integer(required=True)
     token_issuer_username = fields.String(required=True)
@@ -12,5 +12,5 @@ class UserTokenSchema(Schema):
 
     token = fields.String(required=True)
 
-    used_datetime = fields.DateTime()
+    used_datetime = fields.String()
     used = fields.Boolean(required=True)

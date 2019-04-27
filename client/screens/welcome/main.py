@@ -16,13 +16,17 @@ class WelcomeScreen(Screen):
 
     key_pressed = None
 
+    @property
+    def class_name(self):
+        return "WelcomeScreen"
+
     def display(self):
         # TODO:
         #  some sort of rendered which takes a list of
         #  windows and renders them again for this screen?
 
         while True:
-            logger.info('i loaded the welcome page page')
+            logger.info("i loaded the welcome page page")
             if self.key_pressed == curses.KEY_LEFT:
                 dispatch(set_selected_option("login"))
 

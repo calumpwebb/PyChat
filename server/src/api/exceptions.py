@@ -1,5 +1,6 @@
 # TODO: Implment proper exceptions here
 from json import JSONEncoder
+
 from flask_restplus import abort
 
 # https://stackoverflow.com/questions/3768895/how-to-make-a-class-json-serializable
@@ -50,3 +51,8 @@ class UserTokenInvalid(JsonSerializable):
 class NotAuthorised(JsonSerializable):
     message = "Not authorised for this resource"
     status_code = 401
+
+
+class TokenLimitReached(JsonSerializable):
+    message = "Only 10 tokens can be generated per day"
+    status_code = 429

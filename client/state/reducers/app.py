@@ -11,8 +11,14 @@ def app(state=None, action=None):
 
     if action["type"] == "app_set_next_screen":
         state = set_current_screen(state, action)
+    elif action["type"] == "app_set_jwt_token":
+        state = set_jwt_token(state, action)
 
     return state
+
+
+def set_jwt_token(state, action):
+    return extend(state, {"jwt_token": action["value"]})
 
 
 def set_current_screen(state, action):

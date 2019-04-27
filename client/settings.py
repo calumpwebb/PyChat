@@ -23,4 +23,3 @@ class Configuration(object):
     SKIP_LOGIN = os.environ.get("SKIP_LOGIN", "false").lower() == "true"
     DEV_USERNAME = os.environ.get("DEV_USERNAME")
     DEV_PASSWORD = os.environ.get("DEV_PASSWORD")
-

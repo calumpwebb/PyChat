@@ -34,6 +34,10 @@ class SignUpScreen(Screen):
         "button",
     ]
 
+    @property
+    def class_name(self):
+        return "SignUpScreen"
+
     def display(self):
 
         while True:
@@ -299,14 +303,12 @@ class SignUpScreen(Screen):
             else:
                 if sign_up_response.status_code == 409:
                     self.dispatch_error_next_screen(
-                        "Username already taken, try again!",
-                        "SignUpScreen"
+                        "Username already taken, try again!", "SignUpScreen"
                     )
 
                 if sign_up_response.status_code == 401:
                     self.dispatch_error_next_screen(
-                        "Invitation token is not valid, try again!",
-                        "SignUpScreen"
+                        "Invitation token is not valid, try again!", "SignUpScreen"
                     )
 
         except Exception as e:
