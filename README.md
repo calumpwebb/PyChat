@@ -9,6 +9,9 @@ PyChat is going to be an Open Source Terminal Based Messenger system but current
 
 The current plan is to get an alpha version working and then go back and refactor a lot of the code which I'm unhappy with.
 
+<h3 align="center"> How to Run </h3>
+Currently I haven't made it possible for anyone other than myself to run but plan to add a way of running the server using docker-compose and docker files and then making the python client an executable.
+
 <h3 align="center"> Screen Shots of Progress </h3>
 <p align="center">
   <img src="https://github.com/calumpwebb/PyChat/blob/master/img/screenshots/WelcomeScreen.png" width="49%" title="WelcomeScreen">
@@ -17,6 +20,3 @@ The current plan is to get an alpha version working and then go back and refacto
 <p align="center">
   <img src="https://github.com/calumpwebb/PyChat/blob/master/img/screenshots/ErrorScreen.png" width="49%" title="LoginScreen">
 </p>
-
-<h3 align="center"> How to Run </h3>
-Currently I haven't made it possible for anyone other than myself to run but plan to add a way of running the server using docker-compose and docker files and then making the python client an executable.
