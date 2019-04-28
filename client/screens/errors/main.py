@@ -43,8 +43,8 @@ class ErrorScreen(Screen):
             if self.key_pressed == curses.KEY_RESIZE:
                 return self.dispatch_next_screen()
 
-            # ESC
-            if is_input_char(self.key_pressed, True):
+            # ANY char or ESC
+            if is_input_char(self.key_pressed, True) or self.key_pressed == curses.KEY_ENTER or self.key_pressed == 10:
                 logger.info("i pressed esc")
                 return self.dispatch_next_screen(state["back_screen"])
 
