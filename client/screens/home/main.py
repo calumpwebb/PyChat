@@ -24,6 +24,7 @@ class HomeScreen(Screen):
             if self.key_pressed == curses.KEY_RESIZE:
                 return self.dispatch_next_screen()
 
-            return self.dispatch_next_screen("InviteScreen")
+            return self.dispatch_next_screen("ChatScreen")
+            return self.dispatch_next_screen("ChatScreen")
 
             self.key_pressed = self.stdscr.getch()

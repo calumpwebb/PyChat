@@ -44,7 +44,11 @@ class ErrorScreen(Screen):
                 return self.dispatch_next_screen()
 
             # ANY char or ESC
-            if is_input_char(self.key_pressed, True) or self.key_pressed == curses.KEY_ENTER or self.key_pressed == 10:
+            if (
+                is_input_char(self.key_pressed, True)
+                or self.key_pressed == curses.KEY_ENTER
+                or self.key_pressed == 10
+            ):
                 logger.info("i pressed esc")
                 return self.dispatch_next_screen(state["back_screen"])
 

@@ -15,6 +15,7 @@ socketio = SocketIO(app)
 def set_up_api(api_app):
     from src.api.users.resources import namespace as user_namespace
     from src.api.tokens.resources import namespace as token_namespace
+    from src.api.conversations.resources import namespace as conversation_namespace
 
     app.config["SECRET_KEY"] = Configuration.SECRET_KEY
 
@@ -37,6 +38,7 @@ def set_up_api(api_app):
 
     api.add_namespace(user_namespace)
     api.add_namespace(token_namespace)
+    api.add_namespace(conversation_namespace)
 
     app.register_blueprint(v1_blueprint)
 

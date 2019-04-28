@@ -1,6 +1,7 @@
 import curses
 import logging
 
+from screens.chat import ChatScreen
 from screens.errors import ErrorScreen, TooSmallScreen
 from screens.home import HomeScreen
 from screens.invite import InviteScreen
@@ -35,6 +36,7 @@ SCREENS = {
     # main app
     "HomeScreen": HomeScreen,
     "InviteScreen": InviteScreen,
+    "ChatScreen": ChatScreen,
 }
 
 store = pydux_store

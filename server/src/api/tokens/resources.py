@@ -18,20 +18,22 @@ class TokenEndpoint(Resource):
     def get(self):
         """
         Allows a user to retrieve a new invitation token
-
-        # todo: max per user?
         """
         user = current_identity
 
         session = config.get_session()
 
-        number_of_tokens = session.query(db.UserInviteToken).filter(
-            and_(
-                db.UserInviteToken.token_issuer_id == user.id,
-                db.UserInviteToken.created_datetime
-                >= datetime.datetime.utcnow() - datetime.timedelta(days=1),
+        number_of_tokens = (
+            session.query(db.UserInviteToken)
+            .filter(
+                and_(
+                    db.UserInviteToken.token_issuer_id == user.id,
+                    db.UserInviteToken.created_datetime
+                    >= datetime.datetime.utcnow() - datetime.timedelta(days=1),
+                )
             )
-        ).all()
+            .all()
+        )
 
         if len(number_of_tokens) >= 10:
             return TokenLimitReached()
@@ -60,14 +62,14 @@ class TokensEndpoint(Resource):
 
         tokens_query = """
             SELECT
-                TO_CHAR(UIT.created_datetime, 'YYYY-MM-DD HH:MM') as created_datetime,
+                UIT.created_datetime::text as created_datetime,
                 UIT.token_issuer_id,
                 UIT.token_user_id,
                 U_issuer.username as token_issuer_username,
                 U_user.username as token_user_username,
                 UIT.token,
                 UIT.used,
-                TO_CHAR(UIT.used_datetime, 'YYYY-MM-DD HH:MM') as used_datetime
+                UIT.used_datetime::Text as used_datetime
             FROM
                 user_invite_tokens UIT
             LEFT JOIN

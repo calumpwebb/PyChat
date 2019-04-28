@@ -6,6 +6,7 @@ from state.reducers.invite import invite
 from state.reducers.login import login
 from state.reducers.signup import signup
 from state.reducers.welcome import welcome
+from state.reducers.chat import chat
 
 pychat_app = combine_reducers(
     {
@@ -15,5 +16,6 @@ pychat_app = combine_reducers(
         "errors": errors,
         "login": login,
         "invite": invite,
+        "chat": chat
     }
 )

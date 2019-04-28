@@ -60,3 +60,34 @@ class UserInviteToken(Base):
         self.used = True
         self.used_datetime = datetime.datetime.utcnow()
         self.token_user = token_user
+
+
+class Message(Base):
+    __tablename__ = "messages"
+
+    sent_datetime = Column(
+        DateTime, server_default=text("(now() at time zone 'utc')"), nullable=False
+    )
+
+    from_user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    from_user = relationship("User", foreign_keys="Message.from_user_id")
+
+    to_user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    to_user = relationship("User", foreign_keys="Message.to_user_id")
+
+    conversation_id = Column(
+        Integer, ForeignKey("conversations.id"), nullable=False, index=True
+    )
+    conversation = relationship("Conversation", foreign_keys="Message.conversation_id")
+
+    message = Column(Text, nullable=False)
+
+
+class Conversation(Base):
+    __tablename__ = "conversations"
+
+    user_id_1 = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    from_user = relationship("User", foreign_keys="Conversation.user_id_1")
+
+    user_id_2 = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    to_user = relationship("User", foreign_keys="Conversation.user_id_2")

@@ -34,3 +34,16 @@ class ApiClient(Base):
 
     def get_new_token(self):
         return self.get_request(self.TOKEN_URL)
+
+
+    """
+    
+    Conversations
+    
+    """
+
+    def get_all_conversations(self):
+        return self.get_request(self.CONVERSATIONS_URL)
+
+    def get_conversation_messages(self, conversation_id):
+        return self.get_request(self.CONVERSATION_URL.format(conversation_id))
