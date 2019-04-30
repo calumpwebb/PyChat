@@ -25,10 +25,10 @@ class ChatScreen(Screen):
     input_screen = None
     side_bar_convos = []
 
-    """ TODO: 
+    """ TODO for the class:
     
         - establish connection with server to receive updates
-    
+        
     """
 
     @property
@@ -37,6 +37,8 @@ class ChatScreen(Screen):
 
     def display(self):
         if self.first_time_loading():
+            # todo: maybe add a loading state here? whilst we're waiting to see what loads etc
+            # todo: could be as simple as rendering 'loading' then render the rest when we're ready...
             # first time loading
             all_conversations_response = self.api_client.get_all_conversations()
 
@@ -118,6 +120,7 @@ class ChatScreen(Screen):
             if own_message:
                 last_message = ">> " + last_message
 
+            username = trim_text(username, side_bar_screen_width - 12)
             last_message = trim_text(last_message, side_bar_screen_width - 9)
 
             side_bar_convo = self.main_screen.derwin(
@@ -133,14 +136,11 @@ class ChatScreen(Screen):
                 side_bar_convo
             )
 
-            # todo: clip name if too long?
             side_bar_convo_username_y, side_bar_convo_username_x = get_text_center_y_x(
                 side_bar_convo_height, side_bar_convo_width, " {} ".format(username)
             )
             side_bar_convo.addstr(0, side_bar_convo_username_x, " {} ".format(username))
 
-            # TOOD: clip if to long?
-            # TODO: add >> if your own message
             side_bar_convo_last_message_y, side_bar_last_message_username_x = get_text_center_y_x(
                 side_bar_convo_height, side_bar_convo_width, last_message
             )
