@@ -11,8 +11,12 @@ class Base:
 
     USERS_URL = "/v1/users"
     AUTH_URL = "/auth"
+
     TOKENS_URL = "/v1/tokens"
     TOKEN_URL = "/v1/token"
+
+    CONVERSATIONS_URL = '/v1/conversations'
+    CONVERSATION_URL = '/v1/conversation/{}'
 
     # TODO: retries?
 

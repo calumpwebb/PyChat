@@ -96,7 +96,6 @@ class InviteScreen(Screen):
                 # todo: GO BACK A SCREEN! (not sure what screen yet)
                 raise NotImplementedError("Not implemented back button on invite page")
             elif state["selected_option"] == "invite":
-                # todo: get new token!
                 response = self.api_client.get_new_token()
 
                 if response.status_code == 200:

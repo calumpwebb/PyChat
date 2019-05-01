@@ -24,7 +24,7 @@ class Configuration(object):
     SERVER_TYPE = os.environ.get("SERVER_TYPE")
 
     # CAPTURES SQL QUERIES AND PRINTS THEM BEFORE THEY EXECUTE
-    PRINT_SQL_QUERIES = os.environ.get("PRINT_SQL_QUERIES", "false").lower() == "true"
+    PRINT_SQL_QUERIES = os.environ.get("PRINT_SQL_QUERIES", "true").lower() == "true"
 
 
 def get_session(uri=None) -> Session:
